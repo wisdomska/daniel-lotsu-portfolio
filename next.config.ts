@@ -53,11 +53,6 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  experimental: {
-    // The site's CSS is a few KB and most visitors are first-time, so inlining
-    // it removes the render-blocking stylesheet requests before first paint.
-    inlineCss: true,
-  },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
