@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { useCms } from './CmsProvider';
+import { SaveStatus } from './SaveStatus';
 import { Sidebar } from './Sidebar';
 import cms from './cms.module.css';
 import styles from './shell.module.css';
@@ -16,6 +17,7 @@ export function CmsShell({ children }: { children: ReactNode }) {
         <div className={styles.headerLeft}>
           <span className={styles.brand}>{draft.nav.logo || 'Portfolio'}</span>
           <span className={cms.chip}>CMS</span>
+          <SaveStatus />
         </div>
         <div className={styles.headerRight}>
           <a href="/" target="_blank" rel="noopener noreferrer" className={cms.btnPrimary}>
