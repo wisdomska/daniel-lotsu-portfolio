@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SmoothScroll } from '@/components/site/SmoothScroll';
 import { Starfield } from '@/components/site/Starfield';
 import { getPublishedContent } from '@/lib/content';
 import { themeStyle } from '@/lib/theme';
@@ -43,6 +44,7 @@ export default async function SiteLayout({ children, modal }: LayoutProps<'/'>) 
       {content.settings.showStars && <Starfield />}
       {children}
       {modal}
+      <SmoothScroll />
     </div>
   );
 }
