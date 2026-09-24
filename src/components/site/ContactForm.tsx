@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import button from '@/components/ui/Button.module.css';
 import type { Content } from '@/lib/validation/content';
-import { HONEYPOT_FIELD } from '@/lib/validation/contact';
+import { HONEYPOT_FIELD } from '@/lib/validation/constants';
 import { submitContactAction, type ContactState } from '@/server/actions/contact';
 import styles from './Contact.module.css';
 
