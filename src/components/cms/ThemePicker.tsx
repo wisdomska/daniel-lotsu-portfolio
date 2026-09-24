@@ -4,6 +4,7 @@ import { useState, type CSSProperties } from 'react';
 import { accentContrast, HEX_RE, resolveTheme, THEMES } from '@/content/themes';
 import { Icon } from '@/components/ui/Icon';
 import { useCms } from './CmsProvider';
+import { ResetSection } from './ResetSection';
 import { VersionHistory } from './VersionHistory';
 import { ViewHeader } from './ViewHeader';
 import { EXTRA_VIEWS } from './views';
@@ -59,7 +60,11 @@ export function ThemePicker() {
 
   return (
     <>
-      <ViewHeader title={EXTRA_VIEWS.theme.title} desc={EXTRA_VIEWS.theme.desc} />
+      <ViewHeader
+        title={EXTRA_VIEWS.theme.title}
+        desc={EXTRA_VIEWS.theme.desc}
+        actions={<ResetSection section="settings" title="Theme & layout" />}
+      />
       <div className={styles.grid} role="group" aria-label="Accent colour">
         {swatches.map((t) => (
           <button
