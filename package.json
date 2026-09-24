@@ -16,7 +16,9 @@
     "db:migrate": "tsx scripts/migrate.ts",
     "db:studio": "drizzle-kit studio",
     "db:local": "pglite-server --db=./.pglite --port=54329 --max-connections=8",
-    "db:seed": "tsx scripts/seed.ts"
+    "db:seed": "tsx scripts/seed.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@node-rs/argon2": "^2.2.1",
@@ -52,7 +54,8 @@
     "lint-staged": "^17.5.1",
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^5.0.1"
   },
   "packageManager": "pnpm@10.34.5",
   "engines": {
