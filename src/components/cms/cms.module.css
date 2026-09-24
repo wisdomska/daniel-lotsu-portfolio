@@ -1,0 +1,213 @@
+/* CMS chrome, ported from design-source/CMS.dc.html. */
+.shell {
+  min-height: 100vh;
+  background: #0e0e0e;
+  color: var(--fg);
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2a transparent;
+}
+
+.shell ::placeholder {
+  color: var(--muted-2);
+}
+
+.muted {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted-2);
+  line-height: 1.5;
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-6);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.brandRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brandLg {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: var(--tracking-tight);
+  color: var(--pri);
+}
+
+/* Sign in */
+.loginWrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.loginCard {
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  padding: clamp(24px, 6vw, 40px);
+  border-radius: 28px;
+  background: var(--surface-1);
+  border: 1px solid #232323;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.loginHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.loginTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  letter-spacing: -0.04em;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.inputBase {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  border-radius: 12px;
+  color: var(--fg);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.inputBase:focus-visible {
+  border-color: var(--pri);
+  box-shadow: 0 0 0 1px var(--pri);
+}
+
+.inputBase[aria-invalid='true'] {
+  border-color: #ff8a80;
+}
+
+.inputLg {
+  composes: inputBase;
+  padding: 14px 16px;
+  background: var(--surface-3);
+  border: 1px solid var(--line-6);
+  font-size: 15px;
+}
+
+.fieldError {
+  font-size: 13px;
+  color: #ff8a80;
+}
+
+.fieldOk {
+  font-size: 13px;
+  color: var(--pri);
+}
+
+/* Buttons */
+.btn {
+  appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: normal;
+  white-space: nowrap;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--pri);
+  outline-offset: 2px;
+}
+
+.btnPrimary {
+  composes: btn;
+  padding: 10px 16px;
+  border: 0;
+  background: var(--pri);
+  color: var(--on-pri);
+  font-weight: 500;
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: var(--prih);
+  color: var(--on-pri);
+}
+
+.btnPrimaryLg {
+  composes: btnPrimary;
+  gap: 12px;
+  padding: 15px 24px;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}
+
+.btnGhost {
+  composes: btn;
+  padding: 9px 14px;
+  border: 1px solid var(--line-6);
+  background: transparent;
+  color: var(--fg-3);
+}
+
+.btnGhost:hover:not(:disabled) {
+  border-color: #444;
+  color: var(--fg);
+}
+
+.btnOutline {
+  composes: btn;
+  padding: 10px 16px;
+  border: 1px solid var(--pri);
+  background: transparent;
+  color: var(--pri);
+  font-weight: 500;
+}
+
+.btnOutline:hover:not(:disabled) {
+  background: var(--pri);
+  color: var(--on-pri);
+}
+
+.btnDanger {
+  composes: btn;
+  padding: 10px 16px;
+  border: 1px solid #5a2a2a;
+  background: transparent;
+  color: #ff8a80;
+  font-weight: 500;
+}
+
+.btnDanger:hover:not(:disabled) {
+  background: #2a1616;
+}
