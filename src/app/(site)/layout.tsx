@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import type { Metadata } from 'next';
 import { SmoothScroll } from '@/components/site/SmoothScroll';
 import { Starfield } from '@/components/site/Starfield';
@@ -45,6 +46,8 @@ export default async function SiteLayout({ children, modal }: LayoutProps<'/'>) 
       {children}
       {modal}
       <SmoothScroll />
+      {/* Vercel Web Analytics: cookieless page views, public pages only (not the CMS). */}
+      <Analytics />
     </div>
   );
 }
