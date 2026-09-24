@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--pri:#A3E900;--prih:#8FCC00}
+html,body{height:100%}
+body{margin:0;background:#0e0e0e;color:#f2f1ee;font-family:'Instrument Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#f2f1ee;text-decoration:none}
+a:hover{color:var(--pri)}
+::selection{background:var(--pri);color:#111}
+::placeholder{color:#5a5853}
+*{scrollbar-width:thin;scrollbar-color:#2a2a2a transparent}
+::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:10px;border:3px solid transparent;background-clip:content-box}::-webkit-scrollbar-track{background:transparent}
+@keyframes toastIn{from{transform:translate(-50%,12px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+</style>
+<title>CMS · Portfolio</title>
+</helmet>
+
+<div style="height:100vh;display:flex;flex-direction:column;overflow:hidden">
+
+<sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:14px;color:#6c6a65">Loading CMS…</div>
+</sc-if>
+
+<sc-if value="{{ showLogin }}" hint-placeholder-val="{{ false }}">
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:24px">
+    <form onSubmit="{{ doLogin }}" style="width:100%;max-width:400px;box-sizing:border-box;padding:clamp(24px,6vw,40px);border-radius:28px;background:#161616;border:1px solid #232323;display:flex;flex-direction:column;gap:22px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-.05em;color:var(--pri)">{{ brand }}</span>
+        <span style="padding:4px 10px;border-radius:999px;border:1px solid #2a2a2a;font-size:12px;color:#a8a6a0">CMS</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <h1 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:32px;letter-spacing:-.04em">Sign in</h1>
+        <p style="margin:0;font-size:14px;color:#8a8882;line-height:1.5">Enter your passcode to edit the portfolio.</p>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#a8a6a0">Passcode
+        <input type="password" name="pass" autofocus="autofocus" autocomplete="current-password" style="all:unset;box-sizing:border-box;width:100%;padding:14px 16px;border-radius:12px;background:#1c1c1c;border:1px solid #2a2a2a;font-size:15px;color:#f2f1ee" style-focus="border-color:var(--pri)">
+      </label>
+      <sc-if value="{{ loginErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:#ff8a80">Incorrect passcode. Try again.</span></sc-if>
+      <button type="submit" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:12px;padding:15px 24px;border-radius:999px;background:var(--pri);color:#111;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:16px;transition:background-color .2s ease" style-hover="background:var(--prih)"><span aria-hidden="true" style="flex:none;width:18px;height:18px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/lock-open.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/lock-open.svg) center/contain no-repeat"></span>Unlock</button>
+      <sc-if value="{{ defaultPass }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;color:#6c6a65;line-height:1.5">First time? The default passcode is <strong style="color:#d9d7d1;font-family:'JetBrains Mono',monospace">admin</strong> — change it under Settings.</span></sc-if>
+    </form>
+  </div>
+</sc-if>
+
+<sc-if value="{{ showApp }}" hint-placeholder-val="{{ false }}">
+  <header style="flex:none;height:64px;box-sizing:border-box;padding:0 {{ m.hPad }};display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #1f1f1f;background:#111">
+    <div style="display:flex;align-items:center;gap:12px;min-width:0">
+      <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:19px;letter-spacing:-.05em;color:var(--pri);white-space:nowrap">{{ brand }}</span>
+      <span style="padding:4px 10px;border-radius:999px;border:1px solid #2a2a2a;font-size:12px;color:#a8a6a0">CMS</span>
+      <span title="{{ saveLabel }}" style="display:inline-flex;align-items:center;gap:8px;margin-left:8px;font-size:13px;color:{{ saveColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0"><span style="flex:none;width:7px;height:7px;border-radius:50%;background:{{ saveColor }}"></span><sc-if value="{{ m.wide }}" hint-placeholder-val="{{ true }}">{{ saveLabel }}</sc-if></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onClick="{{ undo }}" disabled="{{ undoDisabled }}" title="Undo last change" aria-label="Undo" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;min-height:40px;box-sizing:border-box;padding:9px 14px;border-radius:999px;border:1px solid #2a2a2a;font-family:'Space Grotesk',sans-serif;font-size:14px;color:#d9d7d1;opacity:{{ undoOpacity }}" style-hover="border-color:#444"><span aria-hidden="true" style="flex:none;width:16px;height:16px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/undo-2.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/undo-2.svg) center/contain no-repeat"></span>Undo</button>
+      <sc-if value="{{ m.canPreview }}" hint-placeholder-val="{{ true }}"><button onClick="{{ togglePreview }}" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;border:1px solid #2a2a2a;font-family:'Space Grotesk',sans-serif;font-size:14px;color:#d9d7d1" style-hover="border-color:#444"><span aria-hidden="true" style="flex:none;width:16px;height:16px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/{{ previewIcon }}.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/{{ previewIcon }}.svg) center/contain no-repeat"></span>{{ previewLabel }}</button></sc-if>
+      <a href="{{ siteUrl }}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:var(--pri);color:#111;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px" style-hover="background:var(--prih);color:#111"><span aria-hidden="true" style="flex:none;width:16px;height:16px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/external-link.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/external-link.svg) center/contain no-repeat"></span>View site</a>
+    </div>
+  </header>
+
+  <div style="flex:1;min-height:0;display:grid;grid-template-columns:{{ cols }};grid-template-rows:{{ m.rows }}">
+    <aside style="min-height:0;overflow-y:{{ m.asOY }};overflow-x:{{ m.asOX }};border-right:{{ m.asBR }};border-bottom:{{ m.asBB }};background:#111;padding:{{ m.asPad }};display:flex;flex-direction:{{ m.dir }};gap:{{ m.asGap }}">
+      <sc-for list="{{ navGroups }}" as="ng" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:{{ m.dir }};gap:2px;flex:none">
+          <sc-if value="{{ m.wide }}" hint-placeholder-val="{{ true }}"><span style="padding:0 12px 8px;font-size:11px;letter-spacing:.12em;color:#5a5853">{{ ng.label }}</span></sc-if>
+          <sc-for list="{{ ng.items }}" as="it" hint-placeholder-count="5">
+            <button onClick="{{ it.go }}" style="all:unset;cursor:pointer;box-sizing:border-box;width:{{ m.itW }};flex:none;white-space:nowrap;display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;font-size:14px;color:{{ it.fg }};background:{{ it.bg }}" style-hover="background:#1a1a1a;color:#f2f1ee">
+              <span aria-hidden="true" style="flex:none;width:16px;height:16px;background:currentColor;-webkit-mask:url({{ it.iconUrl }}) center/contain no-repeat;mask:url({{ it.iconUrl }}) center/contain no-repeat"></span>
+              <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ it.title }}</span>
+              <sc-if value="{{ it.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;padding:2px 7px;box-sizing:border-box;border-radius:999px;background:var(--pri);color:#111;font-size:11px;font-weight:600;text-align:center">{{ it.badge }}</span></sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </aside>
+
+    <main ref="{{ editorRef }}" style="min-height:0;overflow-y:auto;overflow-x:hidden;background:#0e0e0e">
+      <div style="max-width:760px;margin:0 auto;padding:clamp(20px,4vw,36px) clamp(16px,3vw,40px) 120px;display:flex;flex-direction:column;gap:28px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap">
+          <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+            <h1 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:-.045em;line-height:1.05">{{ secTitle }}</h1>
+            <p style="margin:0;font-size:14px;color:#8a8882;line-height:1.5">{{ secDesc }}</p>
+          </div>
+          <sc-if value="{{ isSchema }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ resetSection }}" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border-radius:999px;border:1px solid #2a2a2a;font-family:'Space Grotesk',sans-serif;font-size:13px;color:#a8a6a0" style-hover="border-color:#444;color:#f2f1ee"><span aria-hidden="true" style="flex:none;width:14px;height:14px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/rotate-ccw.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/rotate-ccw.svg) center/contain no-repeat"></span>Reset section</button>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ isSchema }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+              <div data-row="{{ r.id }}" style="padding-left:{{ r.pad }};border-left:{{ r.rail }}">
+
+                <sc-if value="{{ r.isInput }}" hint-placeholder-val="{{ true }}">
+                  <label style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#a8a6a0">{{ r.label }}
+                    <input type="{{ r.inputType }}" value="{{ r.value }}" onChange="{{ r.onChange }}" placeholder="{{ r.placeholder }}" style="all:unset;box-sizing:border-box;width:100%;padding:12px 14px;border-radius:12px;background:#161616;border:1px solid #262626;font-size:15px;color:#f2f1ee;transition:border-color .15s ease" style-focus="border-color:var(--pri)">
+                  </label>
+                </sc-if>
+
+                <sc-if value="{{ r.isArea }}" hint-placeholder-val="{{ false }}">
+                  <label style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#a8a6a0">
+                    <span style="display:flex;justify-content:space-between;gap:12px"><span>{{ r.label }}</span><span style="color:#5a5853">{{ r.hint }}</span></span>
+                    <textarea value="{{ r.value }}" onChange="{{ r.onChange }}" rows="{{ r.rows }}" style="all:unset;box-sizing:border-box;width:100%;padding:12px 14px;border-radius:12px;background:#161616;border:1px solid #262626;font-size:{{ r.fontSize }};font-family:{{ r.font }};line-height:1.6;color:#f2f1ee;white-space:pre-wrap;resize:vertical;transition:border-color .15s ease" style-focus="border-color:var(--pri)"></textarea>
+                  </label>
+                </sc-if>
+
+                <sc-if value="{{ r.isBool }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ r.onToggle }}" role="switch" aria-checked="{{ r.checked }}" style="all:unset;cursor:pointer;box-sizing:border-box;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border-radius:12px;background:#161616;border:1px solid #262626;font-size:14px;color:#d9d7d1">
+                    <span>{{ r.label }}</span>
+                    <span style="flex:none;position:relative;width:40px;height:22px;border-radius:999px;background:{{ r.trackBg }};transition:background-color .2s ease"><span style="position:absolute;top:3px;left:{{ r.knobX }};width:16px;height:16px;border-radius:50%;background:{{ r.knobBg }};transition:left .2s ease"></span></span>
+                  </button>
+                </sc-if>
+
+                <sc-if value="{{ r.isSelect }}" hint-placeholder-val="{{ false }}">
+                  <label style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#a8a6a0">{{ r.label }}
+                    <select value="{{ r.value }}" onChange="{{ r.onChange }}" style="box-sizing:border-box;width:100%;padding:12px 14px;border-radius:12px;background:#161616;border:1px solid #262626;font-size:15px;color:#f2f1ee;font-family:inherit">
+                      <sc-for list="{{ r.options }}" as="o" hint-placeholder-count="2"><option value="{{ o.v }}">{{ o.l }}</option></sc-for>
+                    </select>
+                  </label>
+                </sc-if>
+
+                <sc-if value="{{ r.isImage }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:8px;font-size:13px;color:#a8a6a0">
+                    <span>{{ r.label }}</span>
+                    <div style="display:flex;gap:12px;align-items:stretch;padding:10px;border-radius:14px;background:#161616;border:1px solid #262626">
+                      <span style="flex:none;width:{{ r.thumbW }};height:64px;border-radius:10px;background-color:#1f1f1f;background-image:url({{ r.value }}),repeating-linear-gradient(135deg,#1b1b1b 0 8px,#202020 8px 16px);background-size:{{ r.thumbFit }},auto;background-repeat:no-repeat;background-position:center;border:1px solid #2a2a2a"></span>
+                      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
+                        <input type="url" value="{{ r.urlValue }}" onChange="{{ r.onChange }}" placeholder="Paste an image link, or upload" style="all:unset;box-sizing:border-box;width:100%;padding:9px 12px;border-radius:10px;background:#1c1c1c;border:1px solid #2a2a2a;font-size:13px;color:#f2f1ee" style-focus="border-color:var(--pri)">
+                        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                          <label style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid var(--pri);color:var(--pri);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500" style-hover="background:var(--pri);color:#111"><span aria-hidden="true" style="flex:none;width:14px;height:14px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/upload.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/upload.svg) center/contain no-repeat"></span>Upload<input type="file" accept="{{ r.accept }}" onChange="{{ r.onFile }}" style="display:none"></label>
+                          <sc-if value="{{ r.hasValue }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onClear }}" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:999px;border:1px solid #2a2a2a;font-family:'Space Grotesk',sans-serif;font-size:13px;color:#a8a6a0" style-hover="color:#ff8a80;border-color:#5a2a2a"><span aria-hidden="true" style="flex:none;width:14px;height:14px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/trash-2.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/trash-2.svg) center/contain no-repeat"></span>Remove</button></sc-if>
+                          <span style="font-size:12px;color:#5a5853">{{ r.note }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ r.isListHead }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:baseline;gap:10px;padding-top:10px">
+                    <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;letter-spacing:-.02em">{{ r.label }}</span>
+                    <span style="font-size:12px;color:#6c6a65">{{ r.count }}</span>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ r.isItem }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:6px;padding:6px 6px 6px 4px;border-radius:12px;background:{{ r.itemBg }};border:1px solid #232323">
+                    <button onClick="{{ r.onToggle }}" aria-expanded="{{ r.open }}" style="all:unset;cursor:pointer;flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:6px 8px;font-size:14px;color:#e4e2dc">
+                      <span aria-hidden="true" style="flex:none;width:16px;height:16px;background:currentColor;transform:rotate({{ r.chev }});transition:transform .2s ease;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/chevron-right.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/chevron-right.svg) center/contain no-repeat"></span>
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#6c6a65">{{ r.index }}</span>
+                      <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ r.title }}</span>
+                    </button>
+                    <button onClick="{{ r.onUp }}" title="Move up" style="all:unset;cursor:pointer;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:#8a8882" style-hover="background:#222;color:#f2f1ee"><span aria-hidden="true" style="width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/arrow-up.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/arrow-up.svg) center/contain no-repeat"></span></button>
+                    <button onClick="{{ r.onDown }}" title="Move down" style="all:unset;cursor:pointer;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:#8a8882" style-hover="background:#222;color:#f2f1ee"><span aria-hidden="true" style="width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/arrow-down.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/arrow-down.svg) center/contain no-repeat"></span></button>
+                    <button onClick="{{ r.onDup }}" title="Duplicate" style="all:unset;cursor:pointer;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:#8a8882" style-hover="background:#222;color:#f2f1ee"><span aria-hidden="true" style="width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/copy.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/copy.svg) center/contain no-repeat"></span></button>
+                    <button onClick="{{ r.onDel }}" title="Delete" style="all:unset;cursor:pointer;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:#8a8882" style-hover="background:#2a1616;color:#ff8a80"><span aria-hidden="true" style="width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/trash-2.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/trash-2.svg) center/contain no-repeat"></span></button>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ r.isStr }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <input type="text" value="{{ r.value }}" onChange="{{ r.onChange }}" style="all:unset;flex:1;min-width:0;box-sizing:border-box;padding:10px 12px;border-radius:10px;background:#161616;border:1px solid #262626;font-size:14px;color:#f2f1ee" style-focus="border-color:var(--pri)">
+                    <button onClick="{{ r.onUp }}" title="Move up" style="all:unset;cursor:pointer;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:#8a8882" style-hover="background:#222;color:#f2f1ee"><span aria-hidden="true" style="width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/arrow-up.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/arrow-up.svg) center/contain no-repeat"></span></button>
+                    <button onClick="{{ r.onDel }}" title="Delete" style="all:unset;cursor:pointer;width:30px;height:30px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:#8a8882" style-hover="background:#2a1616;color:#ff8a80"><span aria-hidden="true" style="width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/x.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/x.svg) center/contain no-repeat"></span></button>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ r.isAdd }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ r.onAdd }}" style="all:unset;cursor:pointer;box-sizing:border-box;width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border-radius:12px;border:1px dashed #333;font-family:'Space Grotesk',sans-serif;font-size:14px;color:#a8a6a0;transition:border-color .2s ease,color .2s ease" style-hover="border-color:var(--pri);color:var(--pri)"><span aria-hidden="true" style="flex:none;width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/plus.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/plus.svg) center/contain no-repeat"></span>{{ r.label }}</button>
+                </sc-if>
+
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isTheme }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:32px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px">
+              <sc-for list="{{ themes }}" as="th" hint-placeholder-count="5">
+                <button onClick="{{ th.pick }}" aria-pressed="{{ th.active }}" style="all:unset;cursor:pointer;box-sizing:border-box;display:flex;flex-direction:column;gap:16px;padding:18px;border-radius:18px;background:#161616;border:2px solid {{ th.border }};transition:border-color .2s ease" style-hover="border-color:#3a3a3a">
+                  <span style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                    <span style="width:44px;height:44px;border-radius:50%;background:{{ th.color }};box-shadow:0 0 24px {{ th.glow }}"></span>
+                    <sc-if value="{{ th.active }}" hint-placeholder-val="{{ false }}"><span style="padding:4px 10px;border-radius:999px;background:{{ th.color }};color:#111;font-size:11px;font-weight:600">Active</span></sc-if>
+                  </span>
+                  <span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px">{{ th.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#6c6a65">{{ th.color }}</span></span>
+                  <span style="display:flex;gap:8px"><span style="padding:7px 14px;border-radius:999px;background:{{ th.color }};color:#111;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500">Button</span><span style="padding:5px 12px;border-radius:999px;border:2px solid {{ th.color }};color:{{ th.color }};font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:500">Button</span></span>
+                </button>
+              </sc-for>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:18px;background:#161616;border:1px solid #232323">
+              <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px">Custom colour</span>
+              <span style="font-size:13px;color:#8a8882">Pick any colour. Bright, saturated colours work best on the dark background.</span>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <input type="color" value="{{ customPicker }}" onChange="{{ onCustomPicker }}" style="width:48px;height:44px;padding:0;border:1px solid #2a2a2a;border-radius:12px;background:#1c1c1c;cursor:pointer">
+                <input type="text" value="{{ customHex }}" onChange="{{ onCustomHex }}" placeholder="#00FFAA" style="all:unset;box-sizing:border-box;width:140px;padding:11px 14px;border-radius:12px;background:#1c1c1c;border:1px solid #2a2a2a;font-family:'JetBrains Mono',monospace;font-size:14px;color:#f2f1ee" style-focus="border-color:var(--pri)">
+                <button onClick="{{ useCustom }}" disabled="{{ customInvalid }}" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:999px;background:var(--pri);color:#111;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;opacity:{{ customOpacity }}" style-hover="background:var(--prih)">Use custom colour</button>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px">Layout &amp; effects</span>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border-radius:12px;background:#161616;border:1px solid #262626;font-size:14px;color:#d9d7d1">
+                <span>Projects layout</span>
+                <span style="display:flex;padding:3px;border-radius:999px;background:#1f1f1f;gap:2px">
+                  <button onClick="{{ setGrid }}" style="all:unset;cursor:pointer;padding:6px 14px;border-radius:999px;font-size:13px;background:{{ gridBg }};color:{{ gridFg }}">Grid</button>
+                  <button onClick="{{ setList }}" style="all:unset;cursor:pointer;padding:6px 14px;border-radius:999px;font-size:13px;background:{{ listBg }};color:{{ listFg }}">List</button>
+                </span>
+              </div>
+              <sc-for list="{{ displayToggles }}" as="r" hint-placeholder-count="2">
+                <button onClick="{{ r.onToggle }}" role="switch" aria-checked="{{ r.checked }}" style="all:unset;cursor:pointer;box-sizing:border-box;width:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 14px;border-radius:12px;background:#161616;border:1px solid #262626;font-size:14px;color:#d9d7d1">
+                  <span>{{ r.label }}</span>
+                  <span style="flex:none;position:relative;width:40px;height:22px;border-radius:999px;background:{{ r.trackBg }};transition:background-color .2s ease"><span style="position:absolute;top:3px;left:{{ r.knobX }};width:16px;height:16px;border-radius:50%;background:{{ r.knobBg }};transition:left .2s ease"></span></span>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isInbox }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-if value="{{ inboxEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:48px 24px;border-radius:18px;border:1px dashed #2a2a2a;text-align:center;font-size:14px;color:#6c6a65">No messages yet. Submissions from the contact form will appear here.</div>
+            </sc-if>
+            <sc-for list="{{ inbox }}" as="m" hint-placeholder-count="0">
+              <article style="display:flex;flex-direction:column;gap:12px;padding:18px 20px;border-radius:16px;background:#161616;border:1px solid {{ m.border }}">
+                <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
+                  <span style="display:flex;align-items:center;gap:10px"><sc-if value="{{ m.unread }}" hint-placeholder-val="{{ false }}"><span style="width:8px;height:8px;border-radius:50%;background:var(--pri)"></span></sc-if><strong style="font-size:15px">{{ m.name }}</strong><span style="font-size:13px;color:#8a8882">{{ m.email }}</span></span>
+                  <span style="font-size:12px;color:#6c6a65">{{ m.when }}</span>
+                </div>
+                <p style="margin:0;font-size:14px;line-height:1.6;color:#d9d7d1;white-space:pre-wrap">{{ m.message }}</p>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <a href="{{ m.reply }}" style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:999px;background:var(--pri);color:#111;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500" style-hover="background:var(--prih);color:#111"><span aria-hidden="true" style="flex:none;width:14px;height:14px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/reply.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/reply.svg) center/contain no-repeat"></span>Reply</a>
+                  <button onClick="{{ m.toggleRead }}" style="all:unset;cursor:pointer;padding:7px 14px;border-radius:999px;border:1px solid #2a2a2a;font-family:'Space Grotesk',sans-serif;font-size:13px;color:#a8a6a0" style-hover="color:#f2f1ee">{{ m.readLabel }}</button>
+                  <button onClick="{{ m.del }}" style="all:unset;cursor:pointer;padding:7px 14px;border-radius:999px;border:1px solid #2a2a2a;font-family:'Space Grotesk',sans-serif;font-size:13px;color:#a8a6a0" style-hover="color:#ff8a80;border-color:#5a2a2a">Delete</button>
+                </div>
+              </article>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:24px">
+            <form onSubmit="{{ changePass }}" style="display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:18px;background:#161616;border:1px solid #232323">
+              <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px">Change passcode</span>
+              <input type="password" name="current" placeholder="Current passcode" autocomplete="current-password" style="all:unset;box-sizing:border-box;width:100%;padding:12px 14px;border-radius:12px;background:#1c1c1c;border:1px solid #2a2a2a;font-size:14px;color:#f2f1ee" style-focus="border-color:var(--pri)">
+              <input type="password" name="next" placeholder="New passcode (min. 4 characters)" autocomplete="new-password" style="all:unset;box-sizing:border-box;width:100%;padding:12px 14px;border-radius:12px;background:#1c1c1c;border:1px solid #2a2a2a;font-size:14px;color:#f2f1ee" style-focus="border-color:var(--pri)">
+              <input type="password" name="confirm" placeholder="Confirm new passcode" autocomplete="new-password" style="all:unset;box-sizing:border-box;width:100%;padding:12px 14px;border-radius:12px;background:#1c1c1c;border:1px solid #2a2a2a;font-size:14px;color:#f2f1ee" style-focus="border-color:var(--pri)">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <button type="submit" style="all:unset;cursor:pointer;padding:11px 18px;border-radius:999px;background:var(--pri);color:#111;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px" style-hover="background:var(--prih)">Update passcode</button>
+                <span style="font-size:13px;color:{{ passMsgColor }}">{{ passMsg }}</span>
+              </div>
+            </form>
+
+            <div style="display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:18px;background:#161616;border:1px solid #232323">
+              <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px">Content data</span>
+              <span style="font-size:13px;color:#8a8882;line-height:1.5">Your edits are saved in this browser. Export a backup file to move content to another device or to publish it, and import it there.</span>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="height:6px;border-radius:999px;background:#222;overflow:hidden"><div style="height:6px;background:{{ storageColor }};width:{{ storagePct }}"></div></div>
+                <span style="font-size:12px;color:#6c6a65">{{ storageLabel }}</span>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button onClick="{{ exportJson }}" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid var(--pri);color:var(--pri);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500" style-hover="background:var(--pri);color:#111"><span aria-hidden="true" style="flex:none;width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/download.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/download.svg) center/contain no-repeat"></span>Export backup</button>
+                <label style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid var(--pri);color:var(--pri);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500" style-hover="background:var(--pri);color:#111"><span aria-hidden="true" style="flex:none;width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/upload.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/upload.svg) center/contain no-repeat"></span>Import backup<input type="file" accept="application/json,.json" onChange="{{ importJson }}" style="display:none"></label>
+                <button onClick="{{ resetAll }}" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid #5a2a2a;color:#ff8a80;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500" style-hover="background:#2a1616"><span aria-hidden="true" style="flex:none;width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/rotate-ccw.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/rotate-ccw.svg) center/contain no-repeat"></span>Reset everything</button>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:20px;border-radius:18px;background:#161616;border:1px solid #232323">
+              <span style="display:flex;flex-direction:column;gap:4px"><span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px">Sign out</span><span style="font-size:13px;color:#8a8882">End this editing session.</span></span>
+              <button onClick="{{ doLogout }}" style="all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;border:1px solid #2a2a2a;font-family:'Space Grotesk',sans-serif;font-size:14px;color:#d9d7d1" style-hover="border-color:#444"><span aria-hidden="true" style="flex:none;width:15px;height:15px;background:currentColor;-webkit-mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/log-out.svg) center/contain no-repeat;mask:url(https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/log-out.svg) center/contain no-repeat"></span>Sign out</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </main>
+
+    <sc-if value="{{ previewOn }}" hint-placeholder-val="{{ true }}">
+      <section style="min-height:0;display:flex;flex-direction:column;border-left:1px solid #1f1f1f;background:#0b0b0b">
+        <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;border-bottom:1px solid #1f1f1f">
+          <span style="font-size:12px;letter-spacing:.12em;color:#6c6a65">LIVE PREVIEW</span>
+          <span style="display:flex;padding:3px;border-radius:999px;background:#1a1a1a;gap:2px">
+            <button onClick="{{ setDesktop }}" style="all:unset;cursor:pointer;padding:5px 12px;border-radius:999px;font-size:12px;background:{{ deskBg }};color:{{ deskFg }}">Desktop</button>
+            <button onClick="{{ setMobile }}" style="all:unset;cursor:pointer;padding:5px 12px;border-radius:999px;font-size:12px;background:{{ mobBg }};color:{{ mobFg }}">Mobile</button>
+          </span>
+        </div>
+        <div ref="{{ paneRef }}" style="flex:1;min-height:0;position:relative;overflow:hidden;display:flex;justify-content:center">
+          <iframe ref="{{ frameRef }}" src="{{ siteUrl }}" title="Portfolio preview" style="position:absolute;top:0;left:{{ frameLeft }};width:{{ frameW }};height:{{ frameH }};border:0;transform:scale({{ frameScale }});transform-origin:0 0;background:#111"></iframe>
+        </div>
+      </section>
+    </sc-if>
+  </div>
+</sc-if>
+
+<sc-if value="{{ hasConfirm }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ cancelConfirm }}" style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:24px">
+    <div onClick="{{ stop }}" role="dialog" aria-modal="true" style="width:100%;max-width:420px;box-sizing:border-box;padding:28px;border-radius:22px;background:#171717;border:1px solid #2a2a2a;display:flex;flex-direction:column;gap:14px">
+      <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-.03em">{{ confirmTitle }}</h2>
+      <p style="margin:0;font-size:14px;line-height:1.55;color:#a8a6a0">{{ confirmBody }}</p>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:6px">
+        <button onClick="{{ cancelConfirm }}" style="all:unset;cursor:pointer;padding:10px 18px;border-radius:999px;border:1px solid #2a2a2a;font-family:'Space Grotesk',sans-serif;font-size:14px;color:#d9d7d1" style-hover="border-color:#444">Cancel</button>
+        <button onClick="{{ runConfirm }}" style="all:unset;cursor:pointer;padding:10px 18px;border-radius:999px;background:#ff6b5e;color:#111;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px" style-hover="background:#ff8a80">{{ confirmCta }}</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+  <div role="status" style="position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:110;padding:12px 20px;border-radius:999px;background:#f2f1ee;color:#111;font-size:14px;font-weight:500;box-shadow:0 12px 40px rgba(0,0,0,.5);animation:toastIn .25s ease;white-space:nowrap">{{ toast }}</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: typeof innerWidth === 'number' ? innerWidth : 1280, cms: null, c: null, authed: false, loginErr: false, sec: 'hero', expanded: {}, save: 'saved', saveErr: '', preview: typeof innerWidth === 'undefined' || innerWidth > 1180, device: 'desktop', pane: { w: 600, h: 800 }, inbox: [], confirm: null, toast: '', passMsg: '', passOk: false, customHex: '', history: [] };
+  editorRef = React.createRef(); paneRef = React.createRef(); frameRef = React.createRef();
+
+  async componentDidMount() {
+    try {
+      const cms = await import(new URL('portfolio-cms.js', location.href).href);
+      const c = cms.load(); cms.applyTheme(c);
+      this.setState({ cms, c, authed: cms.isAuthed(), inbox: cms.getInbox(), customHex: c.settings.customColor || '' });
+    } catch (e) { console.error('CMS failed to load', e); }
+    addEventListener('storage', this.onStorage); addEventListener('keydown', this.onKey); addEventListener('resize', this.onResize);
+    this.ro = new ResizeObserver(() => this.measure()); this.observe();
+  }
+  componentDidUpdate() { this.observe(); }
+  componentWillUnmount() { removeEventListener('resize', this.onResize); removeEventListener('storage', this.onStorage); removeEventListener('keydown', this.onKey); this.ro && this.ro.disconnect(); clearTimeout(this._st); clearTimeout(this._tt); }
+  observe() { const p = this.paneRef.current; if (p && p !== this._obs) { this._obs && this.ro.unobserve(this._obs); this._obs = p; this.ro.observe(p); this.measure(); } }
+  measure() { const p = this.paneRef.current; if (!p) return; const w = p.clientWidth, h = p.clientHeight; if (w !== this.state.pane.w || h !== this.state.pane.h) this.setState({ pane: { w, h } }); }
+  onStorage = (e) => { const cms = this.state.cms; if (!cms) return; if (e.key === cms.KEYS.inbox) this.setState({ inbox: cms.getInbox() }); };
+  onKey = (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'z' && !e.shiftKey && this.state.authed && !/INPUT|TEXTAREA/.test(document.activeElement && document.activeElement.tagName)) { e.preventDefault(); this.undo(); } if (e.key === 'Escape' && this.state.confirm) this.setState({ confirm: null }); };
+
+  onResize = () => { cancelAnimationFrame(this._rz); this._rz = requestAnimationFrame(() => { if (innerWidth !== this.state.vw) this.setState({ vw: innerWidth }); }); };
+  flash(msg) { this.setState({ toast: msg }); clearTimeout(this._tt); this._tt = setTimeout(() => this.setState({ toast: '' }), 2200); }
+  commit(next, { immediate = false } = {}) {
+    const prev = this.state.c;
+    this.setState(s => ({ c: next, save: 'saving', history: s._burst ? s.history : [...s.history.slice(-49), prev], _burst: true }));
+    this.state.cms.applyTheme(next);
+    clearTimeout(this._st);
+    const run = () => { try { this.state.cms.save(this.state.c); this.setState({ save: 'saved', saveErr: '', _burst: false }); } catch (err) { console.error(err); this.setState({ save: 'error', saveErr: 'Storage is full — use image links or smaller images.', _burst: false }); } };
+    if (immediate) run(); else this._st = setTimeout(run, 450);
+  }
+  undo = () => { const h = this.state.history; if (!h.length) return; const prev = h[h.length - 1]; clearTimeout(this._st); this.setState({ c: prev, history: h.slice(0, -1), _burst: false }, () => { this.state.cms.applyTheme(prev); try { this.state.cms.save(prev); this.setState({ save: 'saved' }); } catch (e) { this.setState({ save: 'error' }); } }); this.flash('Change undone'); };
+
+  getIn(o, p) { return p.reduce((a, k) => (a == null ? a : a[k]), o); }
+  setIn(o, p, v) { if (!p.length) return v; const [k, ...r] = p; const base = Array.isArray(o) ? o.slice() : { ...(o || {}) }; base[k] = this.setIn(o ? o[k] : undefined, r, v); return base; }
+  update(path, v, opts) { this.commit(this.setIn(this.state.c, path, v), opts); }
+  listOp(path, fn, opts) { const arr = (this.getIn(this.state.c, path) || []).slice(); fn(arr); this.update(path, arr, opts || { immediate: true }); }
+
+  flatten(fields, obj, base, depth, rows) {
+    const pad = (d) => d ? (d * 18) + 'px' : '0px';
+    const rail = (d) => d ? '1px solid #222' : '0';
+    for (const f of fields) {
+      const path = base.concat(f.key), id = path.join('.'), v = obj ? obj[f.key] : undefined;
+      const common = { id, label: f.label, pad: pad(depth), rail: rail(depth) };
+      const flags = { isInput: false, isArea: false, isBool: false, isSelect: false, isImage: false, isListHead: false, isItem: false, isStr: false, isAdd: false };
+      if (f.type === 'list' || f.type === 'strings') {
+        const arr = Array.isArray(v) ? v : [];
+        rows.push({ ...flags, ...common, isListHead: true, count: arr.length + (arr.length === 1 ? ' item' : ' items') });
+        arr.forEach((it, i) => {
+          const ip = path.concat(i), iid = ip.join('.');
+          const mv = (d) => () => this.listOp(path, a => { const j = i + d; if (j < 0 || j >= a.length) return; [a[i], a[j]] = [a[j], a[i]]; });
+          if (f.type === 'strings') {
+            rows.push({ ...flags, ...common, id: iid, isStr: true, value: it == null ? '' : String(it), onChange: (e) => this.update(ip, e.target.value), onUp: mv(-1), onDel: () => this.listOp(path, a => a.splice(i, 1)) });
+            return;
+          }
+          const open = !!this.state.expanded[iid];
+          const t = f.itemTitle && it && it[f.itemTitle];
+          rows.push({ ...flags, ...common, id: iid, isItem: true, open, chev: open ? '90deg' : '0deg', itemBg: open ? '#1a1a1a' : '#141414', index: String(i + 1).padStart(2, '0'), title: (t && String(t).trim()) || 'Untitled',
+            onToggle: () => this.setState(s => ({ expanded: { ...s.expanded, [iid]: !s.expanded[iid] } })),
+            onUp: mv(-1), onDown: mv(1),
+            onDup: () => this.listOp(path, a => a.splice(i + 1, 0, JSON.parse(JSON.stringify(a[i])))),
+            onDel: () => this.ask('Delete this item?', `“${(t && String(t).trim()) || 'Untitled'}” will be removed.`, 'Delete', () => this.listOp(path, a => a.splice(i, 1))) });
+          if (open) this.flatten(f.of, it, ip, depth + 1, rows);
+        });
+        const single = f.label.replace(/s$/, '').replace(/ie$/, 'y');
+        rows.push({ ...flags, ...common, id: id + '.+', isAdd: true, label: 'Add ' + (f.type === 'strings' ? 'item' : single.toLowerCase()),
+          onAdd: () => { const n = arr.length; this.listOp(path, a => a.push(f.type === 'strings' ? '' : JSON.parse(JSON.stringify(f.newItem || {})))); if (f.type !== 'strings') this.setState(s => ({ expanded: { ...s.expanded, [path.concat(n).join('.')]: true } })); } });
+        continue;
+      }
+      const val = v == null ? '' : v;
+      if (f.type === 'bool') { const on = !!v; rows.push({ ...flags, ...common, isBool: true, checked: on, trackBg: on ? 'var(--pri)' : '#2a2a2a', knobX: on ? '21px' : '3px', knobBg: on ? '#111' : '#8a8882', onToggle: () => this.update(path, !on, { immediate: true }) }); continue; }
+      if (f.type === 'select') { rows.push({ ...flags, ...common, isSelect: true, value: val, options: f.options, onChange: (e) => this.update(path, e.target.value, { immediate: true }) }); continue; }
+      if (f.type === 'image' || f.type === 'file') {
+        const isData = typeof val === 'string' && val.startsWith('data:');
+        const isFile = f.type === 'file';
+        rows.push({ ...flags, ...common, isImage: true, value: isFile ? '' : val, urlValue: isData ? '' : val, hasValue: !!val, accept: f.accept || 'image/*',
+          thumbW: isFile ? '48px' : '88px', thumbFit: path.includes('icon') ? 'contain' : 'cover',
+          note: isData ? (isFile ? 'PDF uploaded ✓' : 'Uploaded image') : (isFile && !val ? 'No file yet' : ''),
+          onChange: (e) => this.update(path, e.target.value.trim()),
+          onClear: () => this.update(path, '', { immediate: true }),
+          onFile: async (e) => { const file = e.target.files && e.target.files[0]; e.target.value = ''; if (!file) return; if (file.size > 8e6) { this.flash('File is too large (max 8 MB)'); return; } try { const url = await this.state.cms.fileToDataUrl(file); if (url.length > 3.5e6) { this.flash('That file is too big to store — try a smaller one'); return; } this.update(path, url, { immediate: true }); this.flash(isFile ? 'PDF uploaded' : 'Image uploaded'); } catch (err) { console.error(err); this.flash('Upload failed'); } } });
+        continue;
+      }
+      const area = f.type === 'textarea' || f.type === 'rich' || f.type === 'code';
+      if (area) { rows.push({ ...flags, ...common, isArea: true, value: val, rows: f.type === 'code' ? 6 : f.type === 'rich' ? 6 : 4, hint: f.type === 'rich' ? '**bold**' : '', font: f.type === 'code' ? "'JetBrains Mono',monospace" : 'inherit', fontSize: f.type === 'code' ? '13px' : '15px', onChange: (e) => this.update(path, e.target.value) }); continue; }
+      rows.push({ ...flags, ...common, isInput: true, inputType: f.type === 'url' ? 'url' : 'text', value: val, placeholder: f.type === 'url' ? 'https://' : '', onChange: (e) => this.update(path, e.target.value) });
+    }
+    return rows;
+  }
+  ask(title, body, cta, fn) { this.setState({ confirm: { title, body, cta, fn } }); }
+  go(id) {
+    this.setState({ sec: id }); const ed = this.editorRef.current; if (ed) ed.scrollTop = 0;
+    const anchor = { hero: 'top', projects: 'projects', about: 'about', blog: 'blog', contact: 'contact', footer: 'contact' }[id];
+    try { const w = this.frameRef.current && this.frameRef.current.contentWindow; if (w && anchor) { const el = w.document.getElementById(anchor); if (el) w.scrollTo({ top: el.getBoundingClientRect().top + w.scrollY - 20, behavior: 'smooth' }); } } catch (e) {}
+  }
+  toggleRow(on, fn, label) { return { label, checked: on, trackBg: on ? 'var(--pri)' : '#2a2a2a', knobX: on ? '21px' : '3px', knobBg: on ? '#111' : '#8a8882', onToggle: fn }; }
+
+  renderVals() {
+    const { cms, c } = this.state;
+    if (!cms || !c) return { loading: true, showLogin: false, showApp: false, hasConfirm: false, hasToast: false };
+    const L = 'https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/';
+    const unread = this.state.inbox.filter(m => !m.read).length;
+    const sec = this.state.sec;
+    const schema = cms.SCHEMA.find(s => s.id === sec);
+    const custom = { theme: { title: 'Theme & layout', desc: 'Choose the accent colour used for buttons, links and highlights across the site.' }, inbox: { title: 'Inbox', desc: 'Messages sent through the contact form on this browser.' }, settings: { title: 'Settings', desc: 'Passcode, backups and data.' } }[sec];
+    const item = (id, title, icon, badge) => ({ id, title, iconUrl: L + icon + '.svg', go: () => this.go(id), bg: sec === id ? '#1c1c1c' : 'transparent', fg: sec === id ? '#f2f1ee' : '#a8a6a0', hasBadge: !!badge, badge: String(badge || '') });
+    const t = cms.theme(c);
+    const pane = this.state.pane, mobile = this.state.device === 'mobile';
+    const vw = mobile ? 390 : 1280; const scale = Math.min(1, pane.w / vw);
+    const vwp = this.state.vw, small = vwp < 820, canPreview = vwp >= 1100, prevOn = this.state.preview && canPreview;
+    const m = { wide: !small, canPreview, dir: small ? 'row' : 'column', asOY: small ? 'hidden' : 'auto', asOX: small ? 'auto' : 'hidden', asBR: small ? '0' : '1px solid #1f1f1f', asBB: small ? '1px solid #1f1f1f' : '0', asPad: small ? '8px 10px' : '16px 10px 24px', asGap: small ? '2px' : '18px', itW: small ? 'auto' : '100%', rows: small ? 'auto minmax(0,1fr)' : 'minmax(0,1fr)', hPad: small ? '12px' : '16px 0 20px' };
+    const cols = small ? 'minmax(0,1fr)' : prevOn ? '220px minmax(380px,1fr) minmax(360px,44%)' : '220px minmax(0,1fr)';
+    const bytes = cms.storageBytes(), cap = 5 * 1024 * 1024, pct = Math.min(100, bytes / cap * 100);
+    const s = c.settings;
+    const hexOk = /^#[0-9a-f]{6}$/i.test(this.state.customHex);
+    const conf = this.state.confirm;
+    return {
+      loading: false, showLogin: !this.state.authed, showApp: this.state.authed,
+      brand: c.nav.logo || 'Portfolio', defaultPass: cms.getPasscode() === cms.DEFAULT_PASSCODE, loginErr: this.state.loginErr,
+      doLogin: (e) => { e.preventDefault(); const p = new FormData(e.target).get('pass') || ''; if (cms.login(String(p))) this.setState({ authed: true, loginErr: false }); else this.setState({ loginErr: true }); },
+      saveLabel: { saved: 'All changes saved', saving: 'Saving…', error: this.state.saveErr || 'Could not save' }[this.state.save],
+      saveColor: { saved: '#8a8882', saving: '#e8c46a', error: '#ff8a80' }[this.state.save],
+      undo: this.undo, undoDisabled: !this.state.history.length, undoOpacity: this.state.history.length ? 1 : .4,
+      togglePreview: () => this.setState(s => ({ preview: !s.preview })), previewLabel: this.state.preview ? 'Hide preview' : 'Show preview', previewIcon: this.state.preview ? 'panel-right-close' : 'panel-right-open',
+      siteUrl: cms.PORTFOLIO_URL, cols,
+      navGroups: [
+        { label: 'CONTENT', items: cms.SCHEMA.map(x => item(x.id, x.title, x.icon)) },
+        { label: 'DESIGN', items: [item('theme', 'Theme & layout', 'palette')] },
+        { label: 'MANAGE', items: [item('inbox', 'Inbox', 'inbox', unread), item('settings', 'Settings', 'settings')] },
+      ],
+      editorRef: this.editorRef, paneRef: this.paneRef, frameRef: this.frameRef,
+      secTitle: schema ? schema.title : custom.title, secDesc: schema ? schema.desc : custom.desc,
+      isSchema: !!schema, isTheme: sec === 'theme', isInbox: sec === 'inbox', isSettings: sec === 'settings',
+      rows: schema ? this.flatten(schema.fields, c[schema.id], [schema.id], 0, []) : [],
+      resetSection: () => schema && this.ask('Reset “' + schema.title + '”?', 'This section will go back to its original content. You can undo this.', 'Reset', () => { this.commit({ ...c, [schema.id]: JSON.parse(JSON.stringify(cms.DEFAULTS[schema.id])) }, { immediate: true }); this.flash(schema.title + ' reset'); }),
+      themes: cms.THEMES.map(th => { const active = s.theme === th.key; return { ...th, active, border: active ? th.color : '#232323', glow: th.color + '55', pick: () => { this.commit({ ...c, settings: { ...s, theme: th.key } }, { immediate: true }); this.flash(th.name + ' applied'); } }; })
+        .concat(s.theme === 'custom' && t.key === 'custom' ? [{ key: 'custom', name: 'Custom', color: t.color, hover: t.hover, active: true, border: t.color, glow: t.color + '55', pick: () => {} }] : []),
+      customHex: this.state.customHex, customPicker: hexOk ? this.state.customHex : t.color,
+      onCustomPicker: (e) => this.setState({ customHex: e.target.value.toUpperCase() }),
+      onCustomHex: (e) => { let v = e.target.value.trim(); if (v && v[0] !== '#') v = '#' + v; this.setState({ customHex: v.toUpperCase() }); },
+      customInvalid: !hexOk, customOpacity: hexOk ? 1 : .4,
+      useCustom: () => { if (!hexOk) return; this.commit({ ...c, settings: { ...s, theme: 'custom', customColor: this.state.customHex } }, { immediate: true }); this.flash('Custom colour applied'); },
+      setGrid: () => this.update(['settings', 'projectLayout'], 'grid', { immediate: true }), setList: () => this.update(['settings', 'projectLayout'], 'list', { immediate: true }),
+      gridBg: s.projectLayout !== 'list' ? 'var(--pri)' : 'transparent', gridFg: s.projectLayout !== 'list' ? '#111' : '#a8a6a0',
+      listBg: s.projectLayout === 'list' ? 'var(--pri)' : 'transparent', listFg: s.projectLayout === 'list' ? '#111' : '#a8a6a0',
+      displayToggles: [
+        this.toggleRow(s.showMarquee !== false, () => this.update(['settings', 'showMarquee'], s.showMarquee === false, { immediate: true }), 'Show scrolling tech strip'),
+        this.toggleRow(s.showStars !== false, () => this.update(['settings', 'showStars'], s.showStars === false, { immediate: true }), 'Show starlight background'),
+      ],
+      inbox: this.state.inbox.map(m => ({ ...m, unread: !m.read, border: m.read ? '#232323' : '#333', when: new Date(m.date).toLocaleString(), reply: 'mailto:' + encodeURIComponent(m.email || '') + '?subject=' + encodeURIComponent('Re: your message'), readLabel: m.read ? 'Mark unread' : 'Mark read',
+        toggleRead: () => { const l = this.state.inbox.map(x => x.id === m.id ? { ...x, read: !x.read } : x); cms.setInbox(l); this.setState({ inbox: l }); },
+        del: () => this.ask('Delete message?', 'The message from ' + (m.name || 'this sender') + ' will be permanently removed.', 'Delete', () => { const l = this.state.inbox.filter(x => x.id !== m.id); cms.setInbox(l); this.setState({ inbox: l }); this.flash('Message deleted'); }) })),
+      inboxEmpty: !this.state.inbox.length,
+      changePass: (e) => { e.preventDefault(); const fd = new FormData(e.target); const cur = String(fd.get('current') || ''), nx = String(fd.get('next') || ''), cf = String(fd.get('confirm') || '');
+        if (cur !== cms.getPasscode()) return this.setState({ passMsg: 'Current passcode is incorrect.', passOk: false });
+        if (nx.length < 4) return this.setState({ passMsg: 'New passcode must be at least 4 characters.', passOk: false });
+        if (nx !== cf) return this.setState({ passMsg: 'New passcodes don’t match.', passOk: false });
+        cms.setPasscode(nx); e.target.reset(); this.setState({ passMsg: 'Passcode updated.', passOk: true }); },
+      passMsg: this.state.passMsg, passMsgColor: this.state.passOk ? 'var(--pri)' : '#ff8a80',
+      storagePct: pct.toFixed(1) + '%', storageColor: pct > 85 ? '#ff8a80' : 'var(--pri)', storageLabel: (bytes / 1024 / 1024).toFixed(2) + ' MB of ~5 MB browser storage used',
+      exportJson: () => { const blob = new Blob([JSON.stringify(c, null, 2)], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'portfolio-content-' + new Date().toISOString().slice(0, 10) + '.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); this.flash('Backup downloaded'); },
+      importJson: (e) => { const file = e.target.files && e.target.files[0]; e.target.value = ''; if (!file) return; const r = new FileReader(); r.onload = () => { try { const data = JSON.parse(r.result); if (!data || typeof data !== 'object' || Array.isArray(data) || !data.hero) throw new Error('bad'); const merged = cms.merge(cms.clone(cms.DEFAULTS), data); this.commit(merged, { immediate: true }); this.setState({ customHex: merged.settings.customColor || '' }); this.flash('Backup imported'); } catch (err) { this.flash('That file isn’t a valid portfolio backup'); } }; r.readAsText(file); },
+      resetAll: () => this.ask('Reset everything?', 'All content and theme settings will return to the originals. Inbox messages and your passcode are kept. You can undo this.', 'Reset everything', () => { this.commit(cms.clone(cms.DEFAULTS), { immediate: true }); this.setState({ customHex: '' }); this.flash('All content reset'); }),
+      doLogout: () => { cms.logout(); this.setState({ authed: false }); },
+      previewOn: prevOn, m,
+      setDesktop: () => this.setState({ device: 'desktop' }), setMobile: () => this.setState({ device: 'mobile' }),
+      deskBg: mobile ? 'transparent' : 'var(--pri)', deskFg: mobile ? '#a8a6a0' : '#111', mobBg: mobile ? 'var(--pri)' : 'transparent', mobFg: mobile ? '#111' : '#a8a6a0',
+      frameW: vw + 'px', frameH: Math.round(pane.h / scale) + 'px', frameScale: scale.toFixed(4), frameLeft: Math.max(0, Math.round((pane.w - vw * scale) / 2)) + 'px',
+      hasConfirm: !!conf, confirmTitle: conf ? conf.title : '', confirmBody: conf ? conf.body : '', confirmCta: conf ? conf.cta : '',
+      cancelConfirm: () => this.setState({ confirm: null }), runConfirm: () => { const f = conf && conf.fn; this.setState({ confirm: null }); f && f(); },
+      stop: (e) => e.stopPropagation(),
+      hasToast: !!this.state.toast, toast: this.state.toast,
+    };
+  }
+}
+</script>
+</body>
+</html>

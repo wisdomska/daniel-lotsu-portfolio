@@ -1,0 +1,65 @@
+.box {
+  --x: 50%;
+  --y: 50%;
+  --o: 0;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30vw;
+  letter-spacing: var(--tracking-tight);
+  line-height: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: crosshair;
+  user-select: none;
+}
+
+.base {
+  color: #1b1b1b;
+  display: flex;
+  justify-content: center;
+}
+
+.word {
+  display: inline-block;
+}
+
+.lit {
+  position: absolute;
+  inset: 0;
+  padding: 0 12px;
+  display: flex;
+  justify-content: center;
+  color: var(--pri);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--pri) 45%, transparent);
+  opacity: var(--o);
+  transition: opacity 0.35s ease;
+  -webkit-mask-image: radial-gradient(
+    circle 190px at var(--x) var(--y),
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 45%,
+    transparent 75%
+  );
+  mask-image: radial-gradient(
+    circle 190px at var(--x) var(--y),
+    #000 0%,
+    rgba(0, 0, 0, 0.55) 45%,
+    transparent 75%
+  );
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: var(--o);
+  transition: opacity 0.35s ease;
+  background: radial-gradient(
+    circle 260px at var(--x) var(--y),
+    color-mix(in srgb, var(--pri) 7%, transparent),
+    transparent 70%
+  );
+}

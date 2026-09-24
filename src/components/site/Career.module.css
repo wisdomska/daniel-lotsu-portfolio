@@ -1,0 +1,101 @@
+.item {
+  border-bottom: 1px solid var(--line-4);
+}
+
+.heading {
+  margin: 0;
+  font: inherit;
+}
+
+.toggle {
+  appearance: none;
+  background: none;
+  border: 0;
+  margin: 0;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 40px 0;
+}
+
+.role {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 2.4vw, 28px);
+  letter-spacing: var(--tracking-tight);
+}
+
+.org {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.badgeNarrow {
+  align-self: flex-start;
+  margin-top: 6px;
+}
+
+.end {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  border: 2px solid var(--pri);
+  background: transparent;
+  color: var(--pri);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.toggle[aria-expanded='true'] .circle,
+.toggle:hover .circle {
+  background: var(--pri);
+  color: var(--on-pri);
+}
+
+.toggle:hover .circle {
+  transform: scale(1.06);
+}
+
+.body {
+  margin: 0;
+  padding: 0 0 44px calc(200px + 32px);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 720px;
+  text-wrap: pretty;
+}
+
+@media (max-width: 899.98px) {
+  .body {
+    padding-left: calc(150px + 24px);
+  }
+}
+
+@media (max-width: 639.98px) {
+  .toggle {
+    padding: 28px 0;
+  }
+  .body {
+    padding-left: 0;
+  }
+}

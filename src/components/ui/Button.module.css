@@ -1,0 +1,51 @@
+/* The two pill buttons the design repeats everywhere. */
+.base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: normal;
+  cursor: pointer;
+  border: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.primary {
+  composes: base;
+  padding: 15px 28px;
+  background: var(--pri);
+  color: var(--on-pri);
+  transition: background-color 0.25s ease;
+}
+
+.primary:hover,
+.primary:focus-visible {
+  background: var(--prih);
+  color: var(--on-pri);
+}
+
+.outline {
+  composes: base;
+  padding: 13px 26px;
+  border: 2px solid var(--pri);
+  color: var(--pri);
+  background-color: transparent;
+  background-image: linear-gradient(var(--pri), var(--pri));
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: 100% 0%;
+  transition:
+    background-size 0.35s ease,
+    color 0.35s ease;
+}
+
+.outline:hover,
+.outline:focus-visible {
+  background-size: 100% 100%;
+  color: var(--on-pri);
+}

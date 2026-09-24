@@ -1,0 +1,63 @@
+/* Row grid shared by the career timeline and the credentials list. */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line-4);
+}
+
+.rowGrid {
+  display: grid;
+  grid-template-columns: minmax(120px, 200px) minmax(0, 1fr) auto;
+  gap: 32px;
+  align-items: baseline;
+}
+
+.time {
+  font-size: 14px;
+  color: var(--muted-2);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-7);
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+.narrowOnly {
+  display: none;
+}
+
+@media (max-width: 899.98px) {
+  .rowGrid {
+    grid-template-columns: minmax(110px, 150px) minmax(0, 1fr) auto;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .rowGrid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 16px;
+    align-items: center;
+  }
+  .time {
+    grid-column: 1 / -1;
+  }
+  .narrowOnly {
+    display: initial;
+  }
+  .wideOnly {
+    display: none;
+  }
+}

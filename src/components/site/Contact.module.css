@@ -1,0 +1,150 @@
+.contact {
+  padding-top: clamp(120px, 14vw, 200px);
+  padding-bottom: clamp(96px, 12vw, 160px);
+}
+
+.layout {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
+  gap: clamp(48px, 8vw, 120px);
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(38px, 6.5vw, 88px);
+  letter-spacing: var(--tracking-tight);
+  line-height: 0.95;
+  overflow-wrap: break-word;
+}
+
+.body {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted);
+  max-width: 460px;
+  text-wrap: pretty;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  overflow-wrap: anywhere;
+  color: var(--fg);
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: var(--pri);
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--muted-2);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.input {
+  appearance: none;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0;
+  padding: 18px 20px;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  border: 1px solid var(--line-5);
+  font-size: 16px;
+  line-height: normal;
+  color: var(--fg);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.input::placeholder {
+  color: #a9a9a9;
+}
+
+.input:focus-visible {
+  border-color: var(--pri);
+  outline: 2px solid var(--pri);
+  outline-offset: 2px;
+}
+
+.textarea {
+  min-height: 150px;
+  resize: vertical;
+  white-space: pre-wrap;
+}
+
+.submit {
+  align-self: flex-start;
+}
+
+.error {
+  margin: 0;
+  font-size: 14px;
+  color: #ff8a80;
+}
+
+.honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.thanks {
+  padding: 40px;
+  border-radius: var(--r-xl);
+  background: var(--surface-2);
+  border: 1px solid var(--line-5);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  justify-content: center;
+}
+
+.thanksEmoji {
+  font-size: 36px;
+}
+
+.thanksTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.thanksBody {
+  margin: 0;
+  font-size: 16px;
+  color: var(--muted);
+}

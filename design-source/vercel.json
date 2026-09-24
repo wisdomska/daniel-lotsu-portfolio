@@ -1,0 +1,8 @@
+{
+  "cleanUrls": false,
+  "rewrites": [
+    { "source": "/cms", "destination": "/CMS.dc.html" },
+    { "source": "/cms/", "destination": "/CMS.dc.html" },
+    { "source": "/", "destination": "/Daniel%20Portfolio.dc.html" }
+  ]
+}

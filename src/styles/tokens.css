@@ -1,0 +1,77 @@
+/*
+ * Design tokens, ported from design-source/Daniel Portfolio.dc.html.
+ * --pri / --prih are the accent and its hover shade. They are overridden at
+ * runtime from the CMS theme (see src/lib/theme.ts), so never hard-code the
+ * accent anywhere else.
+ */
+:root {
+  --pri: #a3e900;
+  --prih: #8fcc00;
+
+  /* Surfaces */
+  --bg: #111;
+  --bg-deep: #0b0b0b;
+  --surface-1: #161616;
+  --surface-2: #1a1a1a;
+  --surface-3: #1c1c1c;
+  --surface-hover: #1f1f1f;
+  --glass: rgba(26, 26, 26, 0.55);
+  --glass-strong: rgba(26, 26, 26, 0.6);
+  --glass-nav: rgba(24, 24, 24, 0.78);
+  --glass-menu: rgba(24, 24, 24, 0.94);
+  --stripe: repeating-linear-gradient(135deg, #191919 0 10px, #1d1d1d 10px 20px);
+
+  /* Lines */
+  --line-1: #1c1c1c;
+  --line-2: #1f1f1f;
+  --line-3: #222;
+  --line-4: #242424;
+  --line-5: #262626;
+  --line-6: #2a2a2a;
+  --line-7: #2c2c2c;
+  --line-8: #333;
+
+  /* Text */
+  --fg: #f2f1ee;
+  --fg-2: #e4e2dc;
+  --fg-3: #d9d7d1;
+  --fg-4: #bdbbb5;
+  --muted: #a8a6a0;
+  --muted-2: #8a8882;
+  --muted-3: #6c6a65;
+  --muted-4: #5f5d58;
+  --muted-5: #5a5853;
+  --ghost: #2e2e2e;
+  --on-pri: #111;
+
+  /* Paper (resume) */
+  --paper: #f4f3ef;
+  --paper-ink: #161616;
+  --paper-ink-2: #3d3b37;
+  --paper-ink-3: #55534e;
+  --paper-ink-4: #6a6862;
+  --paper-line: #d9d7d0;
+  --paper-line-2: #cfcdc6;
+
+  /* Type */
+  --font-display: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+  --font-body: var(--font-instrument-sans), 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), 'JetBrains Mono', ui-monospace, monospace;
+  --tracking-tight: -0.05em;
+
+  /* Layout */
+  --page-max: 1240px;
+  --gutter: clamp(24px, 5vw, 64px);
+  --section-pad: clamp(96px, 12vw, 168px);
+  --heading-gap: clamp(56px, 7vw, 96px);
+
+  /* Radii */
+  --r-pill: 999px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 24px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.3, 0.7, 0.4, 1);
+}

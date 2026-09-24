@@ -1,0 +1,54 @@
+/* Shared section chrome: page width, rhythm and the big section headings. */
+.section {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--section-pad) var(--gutter);
+}
+
+.heading {
+  margin: 0 0 var(--heading-gap);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(34px, 6vw, 80px);
+  letter-spacing: var(--tracking-tight);
+  line-height: 1;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
+.headingRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: var(--heading-gap);
+}
+
+.headingRow .heading {
+  margin: 0;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  border: 1px solid var(--line-6);
+  font-size: 16px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.placeholder {
+  background: var(--stripe);
+  border: 1px solid var(--line-4);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-4);
+}
