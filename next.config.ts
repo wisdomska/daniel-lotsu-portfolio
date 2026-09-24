@@ -8,8 +8,9 @@ const IMAGE_HOSTS = [
   'https://cdn.jsdelivr.net',
   'https://*.public.blob.vercel-storage.com',
 ];
-// Direct-from-browser uploads to Vercel Blob.
-const BLOB_API = ['https://vercel.com/api/blob', 'https://*.blob.vercel-storage.com'];
+// Direct-from-browser uploads to Vercel Blob. The trailing slash makes the
+// first entry a path prefix; without it only the bare path would match.
+const BLOB_API = ['https://vercel.com/api/blob/', 'https://*.blob.vercel-storage.com'];
 // Vercel's comment toolbar, only on preview deployments.
 const VERCEL_LIVE = isPreviewDeploy ? ['https://vercel.live', 'wss://ws-us3.pusher.com'] : [];
 
