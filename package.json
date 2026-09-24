@@ -11,11 +11,12 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky",
-    "vercel-build": "tsx scripts/migrate.ts && next build",
+    "vercel-build": "tsx scripts/migrate.ts && tsx scripts/seed.ts && next build",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx scripts/migrate.ts",
     "db:studio": "drizzle-kit studio",
-    "db:local": "pglite-server --db=./.pglite --port=54329 --max-connections=8"
+    "db:local": "pglite-server --db=./.pglite --port=54329 --max-connections=8",
+    "db:seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
     "@vercel/functions": "^3.9.9",
