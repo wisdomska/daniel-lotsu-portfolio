@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Instrument_Sans, JetBrains_Mono, Space_Grotesk } from 'next/font/google';
+import { SITE_URL } from '@/lib/seo';
 import '@/styles/globals.css';
 
 const spaceGrotesk = Space_Grotesk({
@@ -25,6 +26,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'Daniel Ajayi Lotsu — Backend & Cloud Engineer',
 };
 

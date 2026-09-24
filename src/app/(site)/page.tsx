@@ -5,12 +5,14 @@ import { Contact } from '@/components/site/Contact';
 import { Credentials } from '@/components/site/Credentials';
 import { Footer } from '@/components/site/Footer';
 import { Hero } from '@/components/site/Hero';
+import { JsonLd } from '@/components/site/JsonLd';
 import { LegacyHashRedirect } from '@/components/site/LegacyHashRedirect';
 import { Marquee } from '@/components/site/Marquee';
 import { Nav } from '@/components/site/Nav';
 import { Projects } from '@/components/site/Projects';
 import { Tools } from '@/components/site/Tools';
 import { getPublishedContent } from '@/lib/content';
+import { personJsonLd } from '@/lib/seo';
 
 export default async function HomePage() {
   const c = await getPublishedContent();
@@ -30,6 +32,7 @@ export default async function HomePage() {
       </main>
       <Footer footer={c.footer} nav={c.nav} contact={c.contact} />
       <LegacyHashRedirect />
+      <JsonLd data={personJsonLd(c)} />
     </>
   );
 }
