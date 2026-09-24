@@ -413,7 +413,6 @@ export const SCHEMA: SectionDef[] = [
     desc: 'Use {name} in the thank-you title to insert the sender’s first name.',
     anchor: 'contact',
     fields: [
-      { key: 'pill', label: 'Small pill', type: 'text' },
       { key: 'heading', label: 'Heading', type: 'text' },
       { key: 'body', label: 'Body', type: 'textarea' },
       { key: 'email', label: 'Email', type: 'email' },

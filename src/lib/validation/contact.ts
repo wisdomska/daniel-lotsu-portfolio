@@ -1,7 +1,6 @@
 import { z } from 'zod';
 
-/** Name of the hidden field bots fill in and people never see. */
-export const HONEYPOT_FIELD = 'website';
+export { HONEYPOT_FIELD } from './constants';
 
 export const contactSchema = z.object({
   name: z.string().trim().min(1, 'Please tell me your name').max(100, 'That name is too long'),

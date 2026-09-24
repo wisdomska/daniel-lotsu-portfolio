@@ -41,18 +41,17 @@ export function SpotlightWord({ text }: { text: string }) {
     <div
       ref={box}
       className={styles.box}
+      // Decorative: the brand name is already in the footer as real text.
+      aria-hidden="true"
       onPointerMove={move}
       onPointerEnter={() => setOn(true)}
       onPointerLeave={() => setOn(false)}
     >
       <div className={styles.base}>
-        <span ref={word} className={styles.word}>
-          {text}
-        </span>
+        {/* Drawn with ::before so the purely decorative word is not a text node. */}
+        <span ref={word} className={styles.word} data-text={text} />
       </div>
-      <div className={styles.lit} aria-hidden="true">
-        {text}
-      </div>
+      <div className={styles.lit} aria-hidden="true" data-text={text} />
       <div className={styles.glow} aria-hidden="true" />
     </div>
   );

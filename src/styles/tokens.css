@@ -38,9 +38,12 @@
   --fg-4: #bdbbb5;
   --muted: #a8a6a0;
   --muted-2: #8a8882;
-  --muted-3: #6c6a65;
+  /* Lifted from the prototype (#6c6a65, #5a5853) to pass WCAG AA on the dark
+     background; the originals are kept where they only need the large-text ratio. */
+  --muted-3: #85837f;
+  --muted-3-large: #6c6a65;
   --muted-4: #5f5d58;
-  --muted-5: #5a5853;
+  --muted-5: #696762;
   --ghost: #2e2e2e;
   --on-pri: #111;
 

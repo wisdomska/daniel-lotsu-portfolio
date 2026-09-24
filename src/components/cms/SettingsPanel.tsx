@@ -3,7 +3,7 @@
 import { useActionState, useRef, type ChangeEvent } from 'react';
 import { DEFAULTS } from '@/content/defaults';
 import { Icon } from '@/components/ui/Icon';
-import { PASSWORD_MIN } from '@/lib/validation/auth';
+import { PASSWORD_MIN } from '@/lib/validation/constants';
 import { changePasswordAction, logoutAction, type FormState } from '@/server/actions/auth';
 import { exportBackupAction, validateBackupAction } from '@/server/actions/backup';
 import { useCms } from './CmsProvider';

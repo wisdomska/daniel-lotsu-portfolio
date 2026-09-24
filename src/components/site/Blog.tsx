@@ -59,27 +59,24 @@ export function Blog({ blog, headingLevel = 'h2' }: BlogProps) {
             <ul className={styles.list}>
               {earlier.map((b) => (
                 <li key={b.slug}>
-                  <Link href={postHref(b.slug)} scroll={false} className={styles.row}>
+                  <Link href={postHref(b.slug)} scroll={false} className={styles.card}>
                     <div className={styles.thumb}>
                       {b.image && (
                         <SiteImage
                           src={b.image}
                           alt={b.imageAlt}
                           fill
-                          sizes="96px"
+                          sizes="(max-width: 700px) 100vw, 380px"
                           className={styles.coverImg}
                         />
                       )}
                     </div>
-                    <span className={styles.rowBody}>
-                      <span className={styles.rowCategory}>{b.category}</span>
-                      <h3 className={styles.rowTitle}>{b.title}</h3>
-                      <span className={`${styles.rowDate} ${styles.narrowOnly}`}>
+                    <span className={styles.cardBody}>
+                      <span className={styles.cardCategory}>{b.category}</span>
+                      <h3 className={styles.cardTitle}>{b.title}</h3>
+                      <span className={styles.cardDate}>
                         {b.date} · {b.readTime}
                       </span>
-                    </span>
-                    <span className={`${styles.rowDateWide} ${styles.wideOnly}`}>
-                      {b.date} · {b.readTime}
                     </span>
                   </Link>
                 </li>

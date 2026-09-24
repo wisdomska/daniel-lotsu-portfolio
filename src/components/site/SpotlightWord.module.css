@@ -27,6 +27,11 @@
   display: inline-block;
 }
 
+.word::before,
+.lit::before {
+  content: attr(data-text);
+}
+
 .lit {
   position: absolute;
   inset: 0;

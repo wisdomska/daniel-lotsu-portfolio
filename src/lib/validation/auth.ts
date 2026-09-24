@@ -1,7 +1,7 @@
 import { z } from 'zod';
+import { PASSWORD_MAX, PASSWORD_MIN } from './constants';
 
-export const PASSWORD_MIN = 10;
-export const PASSWORD_MAX = 200;
+export { PASSWORD_MAX, PASSWORD_MIN };
 
 export const loginSchema = z.object({
   email: z.email('Enter your email address').max(254),

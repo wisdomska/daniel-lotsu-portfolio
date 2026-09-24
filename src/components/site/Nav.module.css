@@ -14,7 +14,6 @@
   border-radius: var(--r-pill);
   background: var(--glass-nav);
   backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--line-6);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   display: flex;
@@ -109,7 +108,6 @@
   border-radius: var(--r-xl);
   background: var(--glass-menu);
   backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   border: 1px solid var(--line-6);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   display: flex;
@@ -166,5 +164,15 @@
 @media (min-width: 760px) {
   .menu {
     display: none !important;
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
   }
 }

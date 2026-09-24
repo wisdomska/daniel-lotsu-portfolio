@@ -23,7 +23,7 @@
 
 .last {
   line-height: 0.95;
-  color: var(--muted-3);
+  color: var(--muted-3-large);
 }
 
 .tagline {
@@ -93,7 +93,6 @@
   border: 1px solid var(--line-3);
   background: var(--glass);
   backdrop-filter: blur(18px) saturate(120%);
-  -webkit-backdrop-filter: blur(18px) saturate(120%);
   overflow: hidden;
 }
 
@@ -123,4 +122,23 @@
 .statLabel {
   font-size: 14px;
   color: var(--muted-2);
+}
+
+@keyframes arrowDrop {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  45% {
+    transform: translateY(140%);
+    opacity: 0;
+  }
+  46% {
+    transform: translateY(-140%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
