@@ -1,10 +1,10 @@
 @import './tokens.css';
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/*
+ * No global box-sizing reset: the design is laid out in the default
+ * content-box model (sections are 1240px of content plus padding), and sets
+ * border-box only on the elements that need it.
+ */
 
 html {
   scroll-behavior: smooth;
