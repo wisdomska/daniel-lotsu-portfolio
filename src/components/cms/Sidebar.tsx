@@ -20,8 +20,10 @@ export function Sidebar() {
             const meta = viewMeta(id);
             const isActive = id === active;
             const badge = id === 'inbox' && unread > 0 ? unread : 0;
-            const section = id === 'theme' ? 'settings' : id;
-            const changed = (unpublished as string[]).includes(section);
+            // Theme & layout edits the `settings` section; Settings and Inbox hold no content.
+            const section =
+              id === 'theme' ? 'settings' : id === 'settings' || id === 'inbox' ? null : id;
+            const changed = section !== null && (unpublished as string[]).includes(section);
             return (
               <Link
                 key={id}

@@ -3,7 +3,6 @@ import { CmsShell } from '@/components/cms/CmsShell';
 import { getAdmin } from '@/lib/auth/session';
 import { getDraftContent, getPublishedContent } from '@/lib/content';
 import { countUnread } from '@/lib/inbox';
-import { themeStyle } from '@/lib/theme';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,10 +20,8 @@ export default async function DashboardLayout({ children }: LayoutProps<'/cms'>)
     countUnread(),
   ]);
   return (
-    <div style={themeStyle(draft.settings)}>
-      <CmsProvider initialDraft={draft} initialPublished={published} initialUnread={unread}>
-        <CmsShell>{children}</CmsShell>
-      </CmsProvider>
-    </div>
+    <CmsProvider initialDraft={draft} initialPublished={published} initialUnread={unread}>
+      <CmsShell>{children}</CmsShell>
+    </CmsProvider>
   );
 }

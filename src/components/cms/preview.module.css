@@ -1,0 +1,75 @@
+.root {
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--bg);
+}
+
+/* Preview pane in the CMS */
+.pane {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--line-2);
+  background: var(--bg-deep);
+}
+
+.bar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-2);
+}
+
+.label {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--muted-2);
+}
+
+.segmented {
+  display: flex;
+  padding: 3px;
+  border-radius: var(--r-pill);
+  background: var(--surface-2);
+  gap: 2px;
+}
+
+.seg {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  font: inherit;
+  font-size: 12px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.seg[aria-pressed='true'] {
+  background: var(--pri);
+  color: var(--on-pri);
+}
+
+.seg:focus-visible {
+  outline: 2px solid var(--pri);
+  outline-offset: 2px;
+}
+
+.viewport {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.frame {
+  position: absolute;
+  top: 0;
+  border: 0;
+  transform-origin: 0 0;
+  background: var(--bg);
+}
