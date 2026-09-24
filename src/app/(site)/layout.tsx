@@ -46,8 +46,9 @@ export default async function SiteLayout({ children, modal }: LayoutProps<'/'>) 
       {children}
       {modal}
       <SmoothScroll />
-      {/* Vercel Web Analytics: cookieless page views, public pages only (not the CMS). */}
-      <Analytics />
+      {/* Vercel Web Analytics: cookieless page views, public pages only (not the CMS).
+          Only on Vercel, which serves the script; elsewhere (CI, `next start`) it would 404. */}
+      {process.env.VERCEL && <Analytics />}
     </div>
   );
 }
