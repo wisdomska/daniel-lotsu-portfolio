@@ -43,6 +43,8 @@ export function PreviewClient({ initial }: { initial: Content }) {
       className={styles.root}
       style={themeStyle(content.settings)}
       onClickCapture={onClickCapture}
+      // The preview must never send a real contact message.
+      onSubmitCapture={(e) => e.preventDefault()}
     >
       {content.settings.showStars && <Starfield />}
       <HomeView c={content} />
