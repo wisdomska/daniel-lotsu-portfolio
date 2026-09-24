@@ -19,8 +19,10 @@
     "db:seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
+    "@node-rs/argon2": "^2.2.1",
     "@vercel/functions": "^3.9.9",
     "drizzle-orm": "^0.45.3",
+    "jose": "^6.2.12",
     "lucide-react": "^1.48.0",
     "next": "16.3.6",
     "pg": "^8.23.0",
@@ -34,6 +36,7 @@
     "@commitlint/config-conventional": "^21.2.3",
     "@electric-sql/pglite": "^0.5.8",
     "@electric-sql/pglite-socket": "^0.2.11",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^24.13.6",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
