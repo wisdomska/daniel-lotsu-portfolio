@@ -12,8 +12,8 @@ import {
 } from 'react';
 import { ConfirmDialog, type ConfirmRequest } from '@/components/ui/ConfirmDialog';
 import { setIn, type Path } from '@/lib/paths';
-import type { Content, SectionId } from '@/lib/validation/content';
-import { saveDraftAction } from '@/server/actions/content';
+import { SECTION_IDS, type Content, type SectionId } from '@/lib/validation/content';
+import { publishAction, saveDraftAction } from '@/server/actions/content';
 import styles from './shell.module.css';
 
 export type SaveStatus = 'saved' | 'saving' | 'error' | 'invalid';
@@ -29,9 +29,17 @@ export interface CmsState {
   status: SaveStatus;
   /** Validation messages keyed by dotted path ("blog.posts.0.slug"). */
   issues: Record<string, string>;
+  /** Sections whose draft differs from what is live. */
+  unpublished: SectionId[];
   update: (path: Path, value: unknown, opts?: UpdateOptions) => void;
+  /** Replace whole sections (restore, reset, import) as one undoable change. */
+  replace: (sections: Partial<Content>) => void;
   /** Wait for any pending autosave. Resolves false if something could not be saved. */
   flush: () => Promise<boolean>;
+  publish: () => Promise<void>;
+  publishing: boolean;
+  undo: () => void;
+  canUndo: boolean;
   flash: (message: string) => void;
   confirm: (req: ConfirmRequest) => Promise<boolean>;
   unread: number;
@@ -54,11 +62,17 @@ interface CmsProviderProps {
 }
 
 const SAVE_DELAY_MS = 450;
+/** Keystrokes closer together than this are undone as one change. */
+const UNDO_BURST_MS = 800;
+const UNDO_LIMIT = 50;
+
+const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
 
 /**
  * Editor state shared by every CMS screen. It lives in the dashboard layout,
- * so it survives moving between sections. Edits apply locally at once and are
- * autosaved per section after a short pause.
+ * so it survives moving between sections. Edits apply locally at once, are
+ * autosaved to the draft after a short pause, and go live only on Publish.
+ * Undo history is kept for this browser session.
  */
 export function CmsProvider({
   initialDraft,
@@ -67,12 +81,15 @@ export function CmsProvider({
   children,
 }: CmsProviderProps) {
   const [draft, setDraftState] = useState(initialDraft);
-  const [published] = useState(initialPublished);
+  const [published, setPublished] = useState(initialPublished);
   const [status, setStatus] = useState<SaveStatus>('saved');
   const [issues, setIssues] = useState<Record<string, string>>({});
   const [unread, setUnread] = useState(initialUnread);
   const [toast, setToast] = useState('');
   const [confirmReq, setConfirmReq] = useState<ConfirmRequest | null>(null);
+  const history = useRef<Content[]>([]);
+  const [historyLen, setHistoryLen] = useState(0);
+  const [publishing, setPublishing] = useState(false);
 
   const draftRef = useRef(draft);
   const dirty = useRef(new Set<SectionId>());
@@ -80,6 +97,7 @@ export function CmsProvider({
   const chain = useRef<Promise<boolean>>(Promise.resolve(true));
   const confirmResolve = useRef<((ok: boolean) => void) | null>(null);
   const toastTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const lastEdit = useRef(0);
 
   const setDraft = useCallback((next: Content) => {
     draftRef.current = next;
@@ -127,17 +145,54 @@ export function CmsProvider({
     return chain.current;
   }, [runSave]);
 
-  const update = useCallback(
-    (path: Path, value: unknown, opts?: UpdateOptions) => {
-      const id = path[0] as SectionId;
-      setDraft(setIn(draftRef.current, path, value));
-      dirty.current.add(id);
+  const schedule = useCallback(
+    (ids: SectionId[], immediate?: boolean) => {
+      for (const id of ids) dirty.current.add(id);
       setStatus('saving');
       clearTimeout(timer.current);
-      timer.current = setTimeout(() => void flush(), opts?.immediate ? 0 : SAVE_DELAY_MS);
+      timer.current = setTimeout(() => void flush(), immediate ? 0 : SAVE_DELAY_MS);
     },
-    [flush, setDraft],
+    [flush],
   );
+
+  /** Remember the state before a change, folding rapid typing into one undo step. */
+  const remember = useCallback((force: boolean) => {
+    const now = Date.now();
+    const burst = !force && now - lastEdit.current < UNDO_BURST_MS;
+    lastEdit.current = force ? 0 : now;
+    if (burst) return;
+    history.current = [...history.current.slice(-(UNDO_LIMIT - 1)), draftRef.current];
+    setHistoryLen(history.current.length);
+  }, []);
+
+  const update = useCallback(
+    (path: Path, value: unknown, opts?: UpdateOptions) => {
+      remember(Boolean(opts?.immediate));
+      setDraft(setIn(draftRef.current, path, value));
+      schedule([path[0] as SectionId], opts?.immediate);
+    },
+    [remember, schedule, setDraft],
+  );
+
+  const replace = useCallback(
+    (sections: Partial<Content>) => {
+      remember(true);
+      setDraft({ ...draftRef.current, ...sections });
+      schedule(Object.keys(sections) as SectionId[], true);
+    },
+    [remember, schedule, setDraft],
+  );
+
+  const undo = useCallback(() => {
+    const prev = history.current.at(-1);
+    if (!prev) return;
+    history.current = history.current.slice(0, -1);
+    setHistoryLen(history.current.length);
+    const changed = SECTION_IDS.filter((id) => !same(prev[id], draftRef.current[id]));
+    setDraft(prev);
+    lastEdit.current = 0;
+    schedule(changed, true);
+  }, [schedule, setDraft]);
 
   const flash = useCallback((message: string) => {
     setToast(message);
@@ -151,6 +206,60 @@ export function CmsProvider({
       confirmResolve.current = resolve;
     });
   }, []);
+
+  const unpublished = useMemo(
+    () => SECTION_IDS.filter((id) => !same(draft[id], published[id])),
+    [draft, published],
+  );
+
+  const publish = useCallback(async () => {
+    setPublishing(true);
+    try {
+      if (!(await flush())) {
+        flash('Fix the highlighted fields before publishing');
+        return;
+      }
+      const ids = SECTION_IDS.filter((id) => !same(draftRef.current[id], published[id]));
+      if (ids.length === 0) {
+        flash('Everything is already live');
+        return;
+      }
+      const res = await publishAction(ids);
+      if (!res.ok) {
+        flash(res.error ?? 'Publishing failed');
+        return;
+      }
+      setPublished((p) => ({ ...p, ...res.data.published }));
+      // Adopt the server-normalised copy (e.g. trimmed text) so draft and live match.
+      setDraft({ ...draftRef.current, ...res.data.published });
+      const n = Object.keys(res.data.published).length;
+      flash(
+        res.data.issues.length
+          ? `Published ${n}; some sections need fixing first`
+          : `Published — your site is updating now`,
+      );
+    } catch {
+      flash('Publishing failed. Check your connection and try again.');
+    } finally {
+      setPublishing(false);
+    }
+  }, [flush, flash, published, setDraft]);
+
+  // Ctrl/Cmd+Z undoes CMS changes when you're not typing in a field
+  // (inside a field the browser's own text undo applies).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(
+        (document.activeElement as HTMLElement | null)?.tagName ?? '',
+      );
+      if ((e.metaKey || e.ctrlKey) && !e.shiftKey && e.key.toLowerCase() === 'z' && !typing) {
+        e.preventDefault();
+        undo();
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [undo]);
 
   // Warn before leaving with an autosave still in flight.
   useEffect(() => {
@@ -167,14 +276,36 @@ export function CmsProvider({
       published,
       status,
       issues,
+      unpublished,
       update,
+      replace,
       flush,
+      publish,
+      publishing,
+      undo,
+      canUndo: historyLen > 0,
       flash,
       confirm,
       unread,
       setUnread,
     }),
-    [draft, published, status, issues, update, flush, flash, confirm, unread],
+    [
+      draft,
+      published,
+      status,
+      issues,
+      unpublished,
+      update,
+      replace,
+      flush,
+      publish,
+      publishing,
+      undo,
+      historyLen,
+      flash,
+      confirm,
+      unread,
+    ],
   );
 
   return (

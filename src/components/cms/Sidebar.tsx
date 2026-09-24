@@ -9,7 +9,7 @@ import styles from './shell.module.css';
 
 export function Sidebar() {
   const active = viewFromPath(usePathname());
-  const { unread } = useCms();
+  const { unread, unpublished } = useCms();
 
   return (
     <nav className={styles.sidebar} aria-label="CMS sections">
@@ -20,6 +20,8 @@ export function Sidebar() {
             const meta = viewMeta(id);
             const isActive = id === active;
             const badge = id === 'inbox' && unread > 0 ? unread : 0;
+            const section = id === 'theme' ? 'settings' : id;
+            const changed = (unpublished as string[]).includes(section);
             return (
               <Link
                 key={id}
@@ -29,6 +31,11 @@ export function Sidebar() {
               >
                 <Icon name={meta.icon} size={16} />
                 <span className={styles.navText}>{meta.title}</span>
+                {changed && (
+                  <span className={styles.dirtyDot} title="Unpublished changes">
+                    <span className="visually-hidden">(unpublished changes)</span>
+                  </span>
+                )}
                 {badge > 0 && (
                   <span className={styles.badge} aria-label={`${badge} unread`}>
                     {badge}

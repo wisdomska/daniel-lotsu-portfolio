@@ -264,3 +264,13 @@
   animation: toastIn 0.25s ease;
   white-space: nowrap;
 }
+
+.hideSmall {
+  display: inline;
+}
+
+@media (max-width: 639.98px) {
+  .hideSmall {
+    display: none;
+  }
+}
