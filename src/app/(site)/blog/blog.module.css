@@ -1,0 +1,4 @@
+/* Clear the floating nav bar above the blog panel. */
+.main {
+  padding-top: clamp(72px, 9vw, 104px);
+}

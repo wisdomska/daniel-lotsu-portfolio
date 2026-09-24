@@ -1,0 +1,387 @@
+.reader {
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+/* Sticky top bar */
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: rgba(17, 17, 17, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line-2);
+}
+
+.barInner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: 14px clamp(20px, 4vw, 48px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.back {
+  padding: 10px 20px 10px 16px;
+  font-size: 15px;
+}
+
+.barTitle {
+  font-size: 13px;
+  color: var(--muted-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.pos {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+
+.track {
+  height: 2px;
+  background: var(--line-1);
+}
+
+.fill {
+  height: 2px;
+  background: var(--pri);
+  transition: width 0.1s linear;
+}
+
+/* Article */
+.article {
+  padding: clamp(56px, 8vw, 112px) clamp(20px, 4vw, 48px) 0;
+}
+
+.header {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--muted-2);
+}
+
+.category {
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--line-6);
+  color: var(--fg-3);
+}
+
+.bullet {
+  color: #3a3a3a;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(36px, 5.4vw, 68px);
+  line-height: 1.02;
+  letter-spacing: var(--tracking-tight);
+  text-wrap: balance;
+}
+
+.byline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 4px;
+}
+
+.avatar {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--surface-3);
+  border: 1px solid var(--line-6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--fg-3);
+}
+
+.avatarLg {
+  width: 56px;
+  height: 56px;
+  font-size: 18px;
+}
+
+.avatarImg {
+  object-fit: cover;
+}
+
+.bylineText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.authorName {
+  font-size: 15px;
+  color: var(--fg);
+}
+
+.authorRole {
+  font-size: 13px;
+  color: var(--muted-2);
+}
+
+.cover {
+  max-width: 1100px;
+  margin: clamp(48px, 6vw, 80px) auto 0;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--surface-1);
+  border: 1px solid var(--line-2);
+}
+
+.coverFrame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 21 / 9;
+}
+
+.coverImg {
+  object-fit: cover;
+  object-position: center;
+  filter: saturate(0.85) brightness(0.9);
+}
+
+.body {
+  max-width: 680px;
+  margin: clamp(56px, 7vw, 96px) auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.lead {
+  margin: 0;
+  font-size: clamp(20px, 2vw, 23px);
+  line-height: 1.6;
+  color: var(--fg);
+  text-wrap: pretty;
+  white-space: pre-line;
+}
+
+.para {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.8;
+  color: var(--fg-4);
+  text-wrap: pretty;
+  white-space: pre-line;
+}
+
+.code {
+  margin: 12px 0;
+  border-radius: 16px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line-3);
+  overflow: hidden;
+}
+
+.codeBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px 10px 18px;
+  border-bottom: 1px solid var(--line-1);
+}
+
+.codeLang {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted-3);
+}
+
+.copy {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--pri);
+  transition: background-color 0.2s ease;
+}
+
+.copy:hover {
+  background: var(--surface-3);
+}
+
+.pre {
+  margin: 0;
+  padding: clamp(16px, 3vw, 22px) clamp(16px, 3vw, 24px);
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.6vw, 14px);
+  line-height: 1.75;
+  color: var(--fg-3);
+  overflow-x: auto;
+}
+
+.pre code {
+  font: inherit;
+}
+
+.footer {
+  max-width: 680px;
+  margin: clamp(72px, 9vw, 120px) auto 0;
+  padding-top: 40px;
+  border-top: 1px solid var(--line-2);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.authorCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.writtenBy {
+  font-size: 13px;
+  color: var(--muted-3);
+}
+
+.authorBig {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+}
+
+.cta {
+  padding: 13px 24px;
+  font-size: 15px;
+}
+
+.pager {
+  max-width: 1100px;
+  margin: clamp(72px, 9vw, 120px) auto 0;
+  padding-bottom: clamp(72px, 9vw, 120px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  gap: 20px;
+}
+
+.navCard {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 28px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line-3);
+  background: var(--glass-strong);
+  color: var(--fg);
+  transition: border-color 0.25s ease;
+}
+
+.navCard:hover {
+  border-color: var(--pri);
+  color: var(--fg);
+}
+
+.navNext {
+  text-align: right;
+  align-items: flex-end;
+}
+
+.navLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--muted-2);
+}
+
+.navTitle {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+}
+
+.spacer {
+  height: clamp(48px, 6vw, 80px);
+}
+
+@media (max-width: 899.98px) {
+  .coverFrame {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .barTitle {
+    visibility: hidden;
+  }
+  .coverFrame {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* Modal presentation: the dialog itself is the full-screen scroll container. */
+.dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--bg);
+  color: var(--fg);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.dialog::backdrop {
+  background: transparent;
+}

@@ -1,4 +1,5 @@
 import { About } from '@/components/site/About';
+import { Blog } from '@/components/site/Blog';
 import { Career } from '@/components/site/Career';
 import { Credentials } from '@/components/site/Credentials';
 import { Hero } from '@/components/site/Hero';
@@ -21,6 +22,7 @@ export default async function HomePage() {
         <Tools stack={c.stack} />
         <Career career={c.career} />
         <Credentials credentials={c.credentials} />
+        <Blog blog={c.blog} />
       </main>
     </>
   );

@@ -3,7 +3,7 @@ import { getPublishedContent } from '@/lib/content';
 import { themeStyle } from '@/lib/theme';
 import styles from './site.module.css';
 
-export default async function SiteLayout({ children }: LayoutProps<'/'>) {
+export default async function SiteLayout({ children, modal }: LayoutProps<'/'>) {
   const content = await getPublishedContent();
   return (
     <div id="top" className={styles.root} style={themeStyle(content.settings)}>
@@ -12,6 +12,7 @@ export default async function SiteLayout({ children }: LayoutProps<'/'>) {
       </a>
       {content.settings.showStars && <Starfield />}
       {children}
+      {modal}
     </div>
   );
 }
