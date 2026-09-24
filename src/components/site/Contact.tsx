@@ -11,9 +11,6 @@ export function Contact({ contact }: { contact: Content['contact'] }) {
       className={`${section.section} ${styles.contact}`}
       aria-labelledby="contact-title"
     >
-      <div className={section.pill}>
-        <span>{contact.pill}</span>
-      </div>
       <div className={styles.layout}>
         <div className={styles.intro}>
           <h2 id="contact-title" className={styles.heading}>

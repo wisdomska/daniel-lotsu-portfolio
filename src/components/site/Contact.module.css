@@ -4,7 +4,6 @@
 }
 
 .layout {
-  margin-top: 48px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr));
   gap: clamp(48px, 8vw, 120px);

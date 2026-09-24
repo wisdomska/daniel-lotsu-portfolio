@@ -198,7 +198,6 @@ export const blogSchema = z
   });
 
 export const contactSchema = z.object({
-  pill: text(60),
   heading: text(120),
   body: longText(600),
   email,

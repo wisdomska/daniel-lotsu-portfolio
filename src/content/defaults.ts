@@ -535,7 +535,6 @@ export const DEFAULTS: Content = {
     ],
   },
   contact: {
-    pill: '👋 Hello to you too',
     heading: "Let's build something together.",
     body: 'Send me a message and I’ll reply within a day. Whether it’s a role, a project, or just a hello, I’d love to hear from you.',
     email: 'danielajayi100@gmail.com',
