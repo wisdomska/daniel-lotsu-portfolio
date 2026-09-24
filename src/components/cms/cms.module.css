@@ -8,7 +8,7 @@
 }
 
 .shell ::placeholder {
-  color: #7a7872;
+  color: var(--muted-2);
 }
 
 .muted {
