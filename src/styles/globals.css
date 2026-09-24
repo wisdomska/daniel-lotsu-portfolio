@@ -89,44 +89,6 @@ select {
   color: var(--on-pri);
 }
 
-@keyframes mq {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes arrowDrop {
-  0% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  45% {
-    transform: translateY(140%);
-    opacity: 0;
-  }
-  46% {
-    transform: translateY(-140%);
-    opacity: 0;
-  }
-  100% {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.35;
-  }
-}
-
 /*
  * Icon hover micro-animations. The prototype ran these through the Web
  * Animations API on every mouseover; here they are plain CSS keyed on the

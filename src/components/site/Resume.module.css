@@ -4,7 +4,6 @@
   padding: 40px 16px;
   background: rgba(8, 8, 8, 0.85);
   backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
 }
 
 .dialog {
