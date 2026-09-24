@@ -1,7 +1,9 @@
 import { About } from '@/components/site/About';
 import { Blog } from '@/components/site/Blog';
 import { Career } from '@/components/site/Career';
+import { Contact } from '@/components/site/Contact';
 import { Credentials } from '@/components/site/Credentials';
+import { Footer } from '@/components/site/Footer';
 import { Hero } from '@/components/site/Hero';
 import { Marquee } from '@/components/site/Marquee';
 import { Nav } from '@/components/site/Nav';
@@ -23,7 +25,9 @@ export default async function HomePage() {
         <Career career={c.career} />
         <Credentials credentials={c.credentials} />
         <Blog blog={c.blog} />
+        <Contact contact={c.contact} />
       </main>
+      <Footer footer={c.footer} nav={c.nav} contact={c.contact} />
     </>
   );
 }
