@@ -6,7 +6,6 @@ drizzle/meta
 coverage
 playwright-report
 test-results
-
 # Third-party agent skills, kept exactly as published
 .claude/skills
 skills-lock.json
